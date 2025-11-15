@@ -1,2 +1,2 @@
-## Pseudude
-Pseudude is a library to create users pseudonyms.
+## Pseudoe
+Pseudoe is a library to create users pseudonyms.
