@@ -1,4 +1,4 @@
-import { generateDefault } from "../src/generator";
+import { generateDefault } from "../src";
 
-const username = generateDefault({ sep: "" }, "test");
+const username = generateDefault({ sep: "-", case: "upper" });
 console.log(username);
