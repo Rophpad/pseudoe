@@ -161,4 +161,4 @@ Note: the repository's example test may need minor changes if it was written for
 
 ## License
 
-MIT (add a LICENSE file when publishing)
+MIT
