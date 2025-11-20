@@ -49,7 +49,7 @@ function applyCase(s: string, style?: CaseStyle): string {
 }
 
 // format a generated base string according to options
-export function formatPseudo(base: string, opts?: FormatOptions): string {
+export function formatPseudoe(base: string, opts?: FormatOptions): string {
   const o: FormatOptions = opts || {};
   // If a tokenLength was requested and the base contains sections, apply to the last part.
   if (typeof o.tokenLength === "number" && o.tokenLength > 0) {

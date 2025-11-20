@@ -1,43 +1,57 @@
 # Pseudoe
 
-Pseudoe is a tiny, modular TypeScript pseudonym generator. The codebase is intentionally minimal and focused on producing short, readable pseudonyms and providing a small formatting utility.
-
-This README reflects the current source layout and the precise public surface exposed by the code in this repository.
+Pseudoe is a tiny, modular TypeScript pseudonym generator. The public API in this repository is implemented as a class named `pseudoe` exposed from `pseudoe/src/index.ts`. This README documents the class-based API, available options, styles, and usage examples.
 
 ---
 
-## Minimal project layout
+## Quick overview
 
-- `pseudoe/src/`
-  - `index.ts` — public entry (exports `pseudoe` factory)
-  - `generator.ts` — generator implementation (currently exposes `generateDefault`)
-  - `formater.ts` — formatting helpers and `FormatOptions` types
-  - `styles/` — style word lists (e.g. `african`, `fruits`, `galaxy`, `insect`)
-  - `utils/` — crypto, random and hash helpers
-- `pseudoe/test/` — smoke test: `pseudoe-usage.test.ts`
-- `pseudoe/tsconfig.json` — TypeScript configuration
+- API surface: a class `pseudoe` that you instantiate with formatting options.
+- Two primary generation methods:
+  - `.default(tag?: string)` — generates a base token using a 3-digit token (e.g. `pseudoe-042`) and applies formatting options.
+  - `.style(theme?: string)` — picks an adjective + noun from the requested style, appends the 3-digit token, and applies formatting options (e.g. `ripe-mango-042`).
 
-You can inspect the important files directly:
+The class keeps an internal `FormatOptions` object you can update after construction using `.options(...)`.
 
-```pseudoe/src/index.ts#L1-40
-import { generateDefault } from "./generator";
+You can inspect the class in source:
+```pseudoe/src/index.ts#L1-120
+export class pseudoe {
+  private opts: FormatOptions;
 
-export const pseudoe = () => {
-  return { generateDefault };
-};
-```
+  constructor(options: FormatOptions) {
+    console.log("pseudoe instance created");
+    this.opts = options;
+  }
 
-```pseudoe/src/generator.ts#L1-120
-import { formatPseudo, FormatOptions } from "./formater";
+  options(options: FormatOptions) {
+    this.opts = options;
+  }
 
-export function generateDefault(opts?: FormatOptions, tag?: string): string {
-  return formatPseudo(`${tag}-${Math.random()}`, opts);
+  default(tag: string = "pseudoe"): string {
+    return formatPseudoe(`${tag}-${digits.next()}`, this.opts);
+  }
+
+  style(theme?: string): string {
+    // selects adjective/noun from chosen style, appends token, calls formatPseudoe(...)
+  }
 }
 ```
 
-```pseudoe/src/formater.ts#L1-220
-// Exports FormatOptions and formatPseudo(base, opts)
-export type CaseStyle = 'lower'|'upper'|'kebab'|'snake'|'camel'|'pascal'|'none';
+---
+
+## FormatOptions
+
+Formatting is handled by `formatPseudoe(base, opts)` (see `pseudoe/src/utils/formater.ts`). The available options are:
+
+- `sep?: string` — separator used to join parts (default `'-'`). Example: `sep: '_'`.
+- `case?: 'lower' | 'upper' | 'kebab' | 'snake' | 'camel' | 'pascal' | 'none'` — final casing transformation.
+- `prefix?: string` — string to prepend to the final pseudo.
+- `suffix?: string` — string to append to the final pseudo.
+- `tokenLength?: number` — when present, truncates the last token segment to this length.
+- `useUUID?: boolean` — reserved for use with UUID/hex token implementations (present in the type for future extensions).
+
+Example (source showing the shape of the type):
+```pseudoe/src/utils/formater.ts#L1-80
 export interface FormatOptions {
   sep?: string;
   case?: CaseStyle;
@@ -46,84 +60,105 @@ export interface FormatOptions {
   tokenLength?: number;
   useUUID?: boolean;
 }
-export function formatPseudo(base: string, opts?: FormatOptions): string { ... }
 ```
 
 ---
 
-## Current public API (accurate)
+## Styles
 
-At present the repository exposes a minimal public surface via `pseudoe/src/index.ts`:
+Built-in styles live under `pseudoe/src/styles/`. The available style keys are:
 
-- `pseudoe()` — a small factory that returns an object with the `generateDefault` function.
+- `african`
+- `fruits`
+- `galaxy`
+- `insect`
 
-Usage pattern (current code):
+Each style exports two read-only arrays: `adjectives` and `nouns`. The `.style(theme?)` method picks one adjective and one noun at random from the selected style and appends the 3-digit token.
 
-```pseudoe/README.md#L1-20
-import { pseudoe } from './src'
-const api = pseudoe()
-const result = api.generateDefault({ sep: '_' }, 'tag')
-// result is a formatted string produced by formatPseudo(`${tag}-${Math.random()}`, opts)
+Example: (showing where styles are aggregated)
+```pseudoe/src/styles/index.ts#L1-80
+export const STYLES = {
+  african,
+  fruits,
+  galaxy,
+  insect,
+} as const;
 ```
 
-Notes:
-- `generateDefault(opts?: FormatOptions, tag?: string)` constructs a base token using `${tag}-${Math.random()}` and then calls `formatPseudo` with the provided options.
-- `FormatOptions` is defined in `formater.ts` and supports `sep`, `case`, `prefix`, `suffix`, and `tokenLength` among others.
-
 ---
 
-## Formatting options
+## Token behavior
 
-Formatting is handled centrally by `formater.ts` via `formatPseudo(base, opts)`.
+The library uses a `ThreeDigitGenerator` which builds a pool of strings `"000"` through `"999"`, shuffles them, and pops values on each call. This gives short, non-sequential 3-digit tokens for readability. If the pool is exhausted, code paths may fall back to a default token (e.g. `"000"`).
 
-Key options:
-- `sep?: string` — separator used to join tokens (default `'-'`); `''` produces no separator.
-- `case?: 'lower'|'upper'|'kebab'|'snake'|'camel'|'pascal'|'none'` — casing transformation applied after joining.
-- `prefix` and `suffix` — strings to prepend/append to the final pseudo.
-- `tokenLength?: number` — truncates the last token segment to the requested length before applying sep/case.
-
-Because `generateDefault` simply formats a base string built from `tag` and a random number, the formatting options determine the final shape.
-
----
-
-## Styles & Deterministic generation
-
-- Style lists live under `pseudoe/src/styles/`. Each style exports `adjectives` and `nouns`.
-- The current codebase focuses on `generateDefault`; other style-based or deterministic functions were present previously but are not the active minimal API in the code you currently have.
-
-If you want to add `generateFromStyle`, `generateCombo` or `generateCryptedSync` back into `generator.ts`, follow the approach in `formater.ts`:
-1. produce the raw base (adjective + noun or deterministic pick)
-2. call `formatPseudo(raw, opts)` to produce the final formatted pseudo
-
----
-
-## Tests / smoke script
-
-A simple smoke/test script exists at:
-
-```pseudoe/test/pseudoe-usage.test.ts#L1-200
-// a simple script that imports `pseudoe`, calls the available functions and performs light runtime checks
+You can inspect the generator here:
+```pseudoe/src/utils/digit-generator.ts#L1-120
+export class ThreeDigitGenerator {
+  private pool: string[];
+  constructor() { /* creates ["000","001",...,"999"] and shuffles */ }
+  next(): string | null {
+    return this.pool.pop() || null;
+  }
+}
 ```
 
-Run it with:
-- Quick (no build): `npx ts-node test/pseudoe-usage.test.ts`
+---
+
+## Usage examples
+
+TypeScript / modern ESM usage:
+
+```pseudoe/src/examples/usage.ts#L1-40
+import { pseudoe } from "./src"; // adjust the import path for your build
+
+// Create an instance with formatting options:
+const api = new pseudoe({ sep: "_", case: "pascal" });
+
+// Generate using default token generator + tag:
+const name1 = api.default("user"); // => e.g. "User_123" (after casing/sep applied)
+console.log(name1);
+
+// Generate using a named style:
+const name2 = api.style("fruits"); // => e.g. "Blushing_Mango_456"
+console.log(name2);
+
+// Update options later:
+api.options({ sep: "-", case: "kebab", prefix: "app-" });
+console.log(api.style("galaxy")); // => e.g. "app-andromeda-walker-789"
+```
+
+Common call patterns:
+- Use `new pseudoe({...})` to create an instance.
+- Use `.default(tag?)` when you want a short tag + token.
+- Use `.style(theme?)` to get adjective+noun+token tokens.
+- Use `.options({...})` to change formatting options on the instance.
+
+If you prefer a single-call utility (functional style) instead of instantiating a class, you can easily wrap the instance in a small helper.
+
+---
+
+## Examples to run (local)
+
+- Quick (no build) with ts-node (if you have it installed):
+  - `npx ts-node test/pseudoe-usage.test.ts` (update the test to import/construct the class-based API).
+
 - Build & run:
   - `npx tsc -p tsconfig.json`
   - `node dist/test/pseudoe-usage.test.js`
 
+Note: the repository's example test may need minor changes if it was written for a previous factory-based API. Replace factory usage with `new pseudoe(...)` and method calls as shown above.
+
 ---
 
-## Notes & next steps
+## Next steps / customization ideas
 
-- The current code is intentionally minimal. If you want the library to expose a more ergonomic API (for example: `import pseudoe from 'pseudoe'` and then `pseudoe()` directly returning strings rather than a factory), I can update `index.ts` to export `generateDefault` (or `pseudoe`) directly.
-- To reintroduce style-based generation or deterministic name hashing, implement the selection logic in `generator.ts` and then reuse `formatPseudo` to ensure consistent formatting.
-- If you want, I can:
-  - Update `index.ts` to export functions in a more conventional manner,
-  - Add `generateFromStyle` and `generateCryptedSync` implementations that use the same formatting pipeline,
-  - Or add examples showing the exact shape of `FormatOptions` usage.
+- Add a convenience default export that constructs a `pseudoe` instance for one-off use.
+- Add a seedable RNG to make `.style()` deterministic across runs.
+- Add methods that return the raw token parts (object shape) in addition to the formatted string.
+- Add more styles or allow passing custom adjective/noun lists.
 
 ---
 
 ## License
 
-MIT (add a LICENSE file when you publish)
+MIT (add a LICENSE file when publishing)

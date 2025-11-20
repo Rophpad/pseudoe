@@ -1,4 +1,9 @@
-import { generateDefault } from "../src";
+import { pseudoe } from "../src";
 
-const username = generateDefault({ sep: "-", case: "upper" });
+const pseudo = new pseudoe({ sep: '', case: 'upper' });
+
+const username = pseudo.default();
 console.log(username);
+
+const africanUsername = pseudo.style('fruits');
+console.log(africanUsername);
