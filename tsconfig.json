@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "target": "ES2019",
-    "module": "CommonJS",
+    "target": "ES2015", 
+    "module": "esnext",
     "lib": ["ES2019", "DOM"],
     "rootDir": "src",
     "outDir": "dist",
@@ -17,6 +17,6 @@
     "moduleResolution": "node",
     "types": ["node"]
   },
-  "include": ["src/**/*"],
+  "include": ["src"],
   "exclude": ["node_modules", "dist", "**/*.spec.ts", "**/__tests__/**"]
 }

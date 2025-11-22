@@ -1,4 +1,32 @@
 {
+  "name": "pseudoe",
+  "version": "1.0.0",
+  "description": "Pseudonymization library for TypeScript",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rophpad/pseudoe.git"
+  },
+  "keywords": [
+    "pseudonym",
+    "anonym",
+    "username",
+    "identifier"
+  ],
+  "author": "rophpad",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Rophpad/pseudoe/issues"
+  },
+  "homepage": "https://github.com/Rophpad/pseudoe#readme",
   "devDependencies": {
     "@types/node": "^24.10.1",
     "ts-node": "^10.9.2",

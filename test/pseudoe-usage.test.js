@@ -1,4 +1,4 @@
-import { pseudoe } from "../dist";
+const { pseudoe } = require("../dist/index");
 
 const pseudo = new pseudoe({ sep: "", case: "upper" });
 
