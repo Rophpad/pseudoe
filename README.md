@@ -104,12 +104,32 @@ export class ThreeDigitGenerator {
 
 ---
 
-## Usage examples
+## Installation
 
-TypeScript / modern ESM usage:
+Install the published package from npm:
+
+```pseudoe/README.md#L1-6
+# Install from npm (recommended)
+npm install pseudoe
+```
+
+Or, to test the local repository during development:
+
+```pseudoe/README.md#L1-4
+# Install locally (from the project root)
+npm install
+# Or, link the package for local testing:
+npm link
+```
+
+## Usage
+
+Below are examples showing how to consume the library in both modern ESM/TypeScript and CommonJS environments.
+
+TypeScript / ESM usage (recommended when using bundlers or native ESM):
 
 ```pseudoe/src/examples/usage.ts#L1-40
-import { pseudoe } from "./src"; // adjust the import path for your build
+import { pseudoe } from "pseudoe"; // or import { pseudoe } from "../dist" for local tests
 
 // Create an instance with formatting options:
 const api = new pseudoe({ sep: "_", case: "pascal" });
@@ -127,8 +147,18 @@ api.options({ sep: "-", case: "kebab", prefix: "app-" });
 console.log(api.style("galaxy")); // => e.g. "app-andromeda-walker-789"
 ```
 
+CommonJS usage (Node.js without ESM / when using the compiled `dist` output):
+
+```pseudoe/test/pseudoe-usage.test.js#L1-12
+const { pseudoe } = require("pseudoe"); // or require("../dist") for local test
+
+const pseudo = new pseudoe({ sep: "-", case: "kebab" });
+console.log(pseudo.default());      // e.g. "pseudoe-042" transformed by opts
+console.log(pseudo.style("african"));// e.g. "ripe-mango-123"
+```
+
 Common call patterns:
-- Use `new pseudoe({...})` to create an instance.
+- Use `new pseudoe({...})` to create an instance configured with `FormatOptions`.
 - Use `.default(tag?)` when you want a short tag + token.
 - Use `.style(theme?)` to get adjective+noun+token tokens.
 - Use `.options({...})` to change formatting options on the instance.
@@ -137,16 +167,18 @@ If you prefer a single-call utility (functional style) instead of instantiating 
 
 ---
 
-## Examples to run (local)
+## Running locally
 
 - Quick (no build) with ts-node (if you have it installed):
-  - `npx ts-node test/pseudoe-usage.test.ts` (update the test to import/construct the class-based API).
+  - `npx ts-node test/pseudoe-usage.test.ts`
+  - When running via `ts-node`, import the TypeScript source (`import { pseudoe } from "../src";`) or compile-first as shown below.
 
 - Build & run:
-  - `npx tsc -p tsconfig.json`
-  - `node dist/test/pseudoe-usage.test.js`
+  - Compile: `npx tsc -p tsconfig.json`
+  - Run the compiled test/script (CommonJS): `node dist/test/pseudoe-usage.test.js`
+  - Or import the compiled library from `dist` in your app: `const { pseudoe } = require('pseudoe')` (when installed) or `require('./dist')` (local).
 
-Note: the repository's example test may need minor changes if it was written for a previous factory-based API. Replace factory usage with `new pseudoe(...)` and method calls as shown above.
+Note: the repository's example test may need minor changes depending on whether you run it against the source (TS/ESM) or the compiled `dist` output (CommonJS). If you run the compiled CommonJS output with Node, use `require()`; for native ESM imports use the ESM build or adjust `package.json`/`tsconfig.json` to emit ESM.
 
 ---
 
