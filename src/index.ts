@@ -42,4 +42,14 @@ export class pseudoe {
     // return a composed token like: "adjective-noun-123"
     return formatPseudoe(`${adjective}-${noun}-${token}`, this.opts);
   }
+
+  random(...themes: string[]): string {
+    const rand = (n: number) => Math.floor(Math.random() * n);
+
+    const style = themes[rand(themes.length)];
+    const styleName = style ? style : "african";
+
+    const pseudo = this.style(styleName);
+    return pseudo;
+  }
 }
