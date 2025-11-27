@@ -184,9 +184,6 @@ Note: the repository's example test may need minor changes depending on whether 
 
 ## Next steps / customization ideas
 
-- Add a convenience default export that constructs a `pseudoe` instance for one-off use.
-- Add a seedable RNG to make `.style()` deterministic across runs.
-- Add methods that return the raw token parts (object shape) in addition to the formatted string.
 - Add more styles or allow passing custom adjective/noun lists.
 
 ---
