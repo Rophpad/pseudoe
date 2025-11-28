@@ -3,10 +3,12 @@ const { pseudoe } = require("../dist/index");
 const pseudo = new pseudoe({ sep: "", case: "upper" });
 
 const username = pseudo.default();
-console.log(username);
+// PSEUDOE355
 
-const africanUsername = pseudo.style("fruits");
-console.log(africanUsername);
+const fruitUsername = pseudo.style("fruits");
+// SWEETFIG386
 
-const randomUsername = pseudo.random("fruits", "galaxy");
-console.log(randomUsername);
+pseudo.options({ sep: "-", case: "lower" });
+
+const africanUsername = pseudo.style("african");
+// zola-ashanti-489

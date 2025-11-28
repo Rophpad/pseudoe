@@ -3,10 +3,13 @@ import { pseudoe } from "../dist";
 const pseudo = new pseudoe({ sep: "", case: "upper" });
 
 const username = pseudo.default();
-console.log(username);
+// PSEUDOE355
 
-const africanUsername = pseudo.style("fruits");
+const fruitUsername = pseudo.style("fruits");
+// SWEETFIG386
+
+pseudo.options({ sep: "-", case: "lower" });
+
+const africanUsername = pseudo.style("african");
+// sweetfig386
 console.log(africanUsername);
-
-const randomUsername = pseudo.random("fruits", "galaxy");
-console.log(randomUsername);
