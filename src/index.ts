@@ -8,7 +8,6 @@ export class pseudoe {
   private opts: FormatOptions;
 
   constructor(options: FormatOptions) {
-    console.log("pseudoe instance created");
     this.opts = options;
   }
 
