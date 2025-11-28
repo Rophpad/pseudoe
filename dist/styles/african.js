@@ -1,3 +1,4 @@
+"use strict";
 /**
  * African style word lists for pseudoe
  *
@@ -5,7 +6,9 @@
  * inspired by African languages, places and names. Keep the lists short and
  * easy to extend elsewhere.
  */
-export const african = {
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.african = void 0;
+exports.african = {
     adjectives: [
         "kola",
         "sunu",

@@ -1,35 +1,54 @@
-import { formatPseudoe } from "./utils/formater";
-import { ThreeDigitGenerator } from "./utils/digit-generator";
-import STYLES from "./styles";
-const digits = new ThreeDigitGenerator();
-export class pseudoe {
-    constructor(options) {
-        console.log("pseudoe instance created");
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.pseudoe = void 0;
+var formater_1 = require("./utils/formater");
+var digit_generator_1 = require("./utils/digit-generator");
+var styles_1 = __importDefault(require("./styles"));
+var digits = new digit_generator_1.ThreeDigitGenerator();
+var pseudoe = /** @class */ (function () {
+    function pseudoe(options) {
         this.opts = options;
     }
-    options(options) {
+    pseudoe.prototype.options = function (options) {
         this.opts = options;
-    }
-    default(tag = "pseudoe") {
-        return formatPseudoe(`${tag}-${digits.next()}`, this.opts);
-    }
-    style(theme) {
+    };
+    pseudoe.prototype.default = function (tag) {
+        if (tag === void 0) { tag = "pseudoe"; }
+        return (0, formater_1.formatPseudoe)("".concat(tag, "-").concat(digits.next()), this.opts);
+    };
+    pseudoe.prototype.style = function (theme) {
         var _a;
         // Choose a valid style name; fall back to 'african' if the requested one is not available
-        const styleName = theme && STYLES[theme]
+        var styleName = theme && styles_1.default[theme]
             ? theme
             : "african";
-        const styles = STYLES[styleName];
+        var styles = styles_1.default[styleName];
         // pick a random adjective and noun from the selected style
-        const adjList = styles.adjectives;
-        const nounList = styles.nouns;
-        const rand = (n) => Math.floor(Math.random() * n);
-        const adjective = adjList[rand(adjList.length)];
-        const noun = nounList[rand(nounList.length)];
+        var adjList = styles.adjectives;
+        var nounList = styles.nouns;
+        var rand = function (n) { return Math.floor(Math.random() * n); };
+        var adjective = adjList[rand(adjList.length)];
+        var noun = nounList[rand(nounList.length)];
         // append a short deterministic token from the 3-digit generator (fallback to '000' if exhausted)
-        const token = (_a = digits.next()) !== null && _a !== void 0 ? _a : "000";
+        var token = (_a = digits.next()) !== null && _a !== void 0 ? _a : "000";
         // return a composed token like: "adjective-noun-123"
-        return formatPseudoe(`${adjective}-${noun}-${token}`, this.opts);
-    }
-}
+        return (0, formater_1.formatPseudoe)("".concat(adjective, "-").concat(noun, "-").concat(token), this.opts);
+    };
+    pseudoe.prototype.random = function () {
+        var themes = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            themes[_i] = arguments[_i];
+        }
+        var rand = function (n) { return Math.floor(Math.random() * n); };
+        var style = themes[rand(themes.length)];
+        var styleName = style ? style : "african";
+        var pseudo = this.style(styleName);
+        return pseudo;
+    };
+    return pseudoe;
+}());
+exports.pseudoe = pseudoe;
 //# sourceMappingURL=index.js.map

@@ -1,10 +1,13 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.insect = void 0;
 /**
  * Insect style word lists for pseudoe
  *
  * Exports a compact, read-only collection of insect-themed adjectives and nouns
  * suitable for generating insect-style pseudonyms.
  */
-export const insect = {
+exports.insect = {
     adjectives: [
         "winged",
         "tiny",

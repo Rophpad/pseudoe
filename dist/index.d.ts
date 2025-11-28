@@ -5,4 +5,5 @@ export declare class pseudoe {
     options(options: FormatOptions): void;
     default(tag?: string): string;
     style(theme?: string): string;
+    random(...themes: string[]): string;
 }

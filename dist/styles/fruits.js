@@ -1,10 +1,13 @@
+"use strict";
 /**
  * Fruits style word lists for pseudoe
  *
  * Exports a small, read-only collection of fruit-themed adjectives and nouns.
  * Keep lists compact and easy to extend.
  */
-export const fruits = {
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.fruits = void 0;
+exports.fruits = {
     adjectives: [
         "ripe",
         "sweet",

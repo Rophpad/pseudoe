@@ -1,10 +1,13 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.galaxy = void 0;
 /**
  * Galaxy style word lists for pseudoe
  *
  * Exports a compact, read-only collection of space- and sci-fi-themed
  * adjectives and nouns suitable for generating galaxy-style pseudonyms.
  */
-export const galaxy = {
+exports.galaxy = {
     adjectives: [
         "andromeda",
         "nebula",
